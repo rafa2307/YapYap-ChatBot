@@ -34,11 +34,6 @@ app.post('/chat', async (req, res) => {
             }
         );
         console.log(response.data);
-        const rateLimitRemaining = response.headers['x-ratelimit-remaining'];
-        const rateLimitReset = response.headers['x-ratelimit-reset'];
-        
-        console.log(`Remaining Requests: ${rateLimitRemaining}`);
-        console.log(`Rate Limit Reset Time: ${new Date(rateLimitReset * 1000).toLocaleString()}`);
         if(response.data && response.data.choices && response.data.choices[0]){
             res.send({ reply: response.data.choices[0].message.content.trim() });
         } else {
