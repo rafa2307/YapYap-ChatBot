@@ -1,18 +1,19 @@
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const axios = require('axios');
+const express = require('express'); // A lightweight web framework for handling HTTP requests.
+const cors = require('cors'); // Allows requests from different domains (important for frontend-backend communication).
+const dotenv = require('dotenv'); // Loads environment variables from a .env file.
+const axios = require('axios'); // Used for making HTTP requests (to call OpenAI’s API).
 
-const app = express();
+const app = express(); // Creates an Express application.
 
-dotenv.config();
+dotenv.config(); // Loads API keys and other secrets from .env.
 
-app.use(cors());
-app.use(express.json());
+app.use(cors()); // Enables Cross-Origin Resource Sharing so frontend apps can communicate with this backend.
+app.use(express.json()); // Ensures the server can parse JSON data from incoming requests.
 
 app.post('/chat', async (req, res) => {
     const { message } = req.body;
 
+    // This checks if the message is empty
     if(!message){
         return res.status(400).send({ error: 'Message is required' });
     }
@@ -23,13 +24,13 @@ app.post('/chat', async (req, res) => {
             {
                 model: 'gpt-3.5-turbo',
                 messages: [{ role: 'user', content: message }],
-                max_tokens: 150,
+                max_tokens: 150, // this limits the AI's response length
                 temperature: 0.7
             },
             {
                 headers: {
                     'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json', // tells the API the request is in JSON format
                 }
             }
         );
